@@ -2,7 +2,14 @@
 
 > A multimodal deep-learning research project for automated multi-label classification of 12-lead ECG recordings, combining attention-enhanced 1D CNNs, ECG-specific data augmentation, ensemble learning, ONNX deployment, and a FastAPI web application.
 
-**Author:** Donyes Hsairi
+---
+
+<div align="center">
+
+**Donyes Hsairi**  
+*Electronic Communication Systems Engineering Student at ENET'Com*
+
+</div>
 
 ---
 
