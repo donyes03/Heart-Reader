@@ -2,10 +2,8 @@
 
 ## Deep Learning for Automated 12-Lead ECG Analysis
 
-**Author:** Donyes Hsairi  
-**Project:** Heart Reader  
-**Version:** Final experimental and web-application iteration  
-**Date:** September 2026
+**Author:** Donyes Hsairi   
+**Date:** June 2026
 
 ---
 
