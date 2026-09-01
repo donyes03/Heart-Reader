@@ -2,6 +2,43 @@
 
 > A multimodal deep-learning research project for automated multi-label classification of 12-lead ECG recordings, combining attention-enhanced 1D CNNs, ECG-specific data augmentation, ensemble learning, ONNX deployment, and a FastAPI web application.
 
+**Author:** Donyes Hsairi
+
+---
+
+## ⭐ Final Experimental Result
+
+The final notebook reports a **test Macro-AUC of 0.9290** for the stacked meta-learner on PTB-XL Fold 10.
+
+| Metric | Result |
+|---|---:|
+| **Test Macro-AUC** | **0.9290** |
+| Macro Precision | 0.67 |
+| Macro Recall | 0.81 |
+| Macro F1 | 0.72 |
+| Weighted F1 | 0.77 |
+| Test label instances | 2,595 |
+
+The three attention-enabled base models achieved the following best validation Macro-AUC values:
+
+| Model | Best Validation Macro-AUC | Best Epoch |
+|---|---:|---:|
+| **Inception1D + Attention** | 0.9282 | 9 |
+| **SE-ResNet1D + Attention** | 0.9307 | 19 |
+| **XResNet1D101 + Attention** | 0.9295 | 14 |
+
+The meta-learner uses the five probabilities produced by each of the three models, resulting in **15 meta-features**.
+
+### Important evaluation note
+
+The **0.9290 Macro-AUC** is the primary result because AUC does not require a classification threshold.
+
+For the thresholded classification report, the final notebook selected thresholds from the Fold 10 precision-recall curves for MI, STTC, CD and HYP. Therefore, those precision/recall/F1 values should be considered **exploratory test-set thresholded results**, not a completely untouched threshold evaluation.
+
+A stricter future evaluation should optimize thresholds on validation data and apply them once to the test set.
+
+---
+
 ## Overview
 
 **Heart Reader** is an end-to-end research prototype designed to classify 12-lead electrocardiograms into five diagnostic superclasses:
@@ -33,51 +70,27 @@ The project combines raw ECG signals with structured PTB-XL+ features and explor
                     Attention-Enhanced
                       1D CNN Models
                               │
-             ┌────────────────┼────────────────┐
-             ▼                ▼                ▼
-        Inception1D       SE-ResNet1D      XResNet1D
-             │                │                │
-             └────────────────┼────────────────┘
-                              ▼
-                       Model Probabilities
-                              │
-                              ▼
+             ┌───────────────┼───────────────┐
+             ▼               ▼               ▼
+        Inception1D      SE-ResNet1D     XResNet1D101
+             │               │               │
+             └───────────────┼───────────────┘
+                             ▼
+                      Model Probabilities
+                             │
+                             ▼
                     Logistic Regression
                        Meta-Learner
-                              │
-                              ▼
-                   5 Diagnostic Outputs
-                              │
-                              ▼
-                     ONNX / FastAPI
-                              │
-                              ▼
-                    Web ECG Interface
+                             │
+                             ▼
+                     5 Diagnostic Outputs
+                             │
+                             ▼
+                        ONNX / FastAPI
+                             │
+                             ▼
+                      Web ECG Interface
 ```
-
----
-
-## ⭐ Final Experimental Result
-
-The final notebook reports a **test Macro-AUC of 0.9290** for the stacked meta-learner on PTB-XL Fold 10.
-
-| Metric | Result |
-|---|---:|
-| **Test Macro-AUC** | **0.9290** |
-| Macro Precision | 0.67 |
-| Macro Recall | 0.81 |
-| Macro F1 | 0.72 |
-| Weighted F1 | 0.77 |
-
-The three attention-enabled base models achieved the following best validation Macro-AUC values:
-
-| Model | Best Validation Macro-AUC | Best Epoch |
-|---|---:|---:|
-| **Inception1D + Attention** | 0.9282 | 9 |
-| **SE-ResNet1D + Attention** | 0.9307 | 19 |
-| **XResNet1D101 + Attention** | 0.9295 | 14 |
-
-The meta-learner uses the five probabilities produced by each of the three models, resulting in **15 meta-features**.
 
 ---
 
@@ -138,7 +151,7 @@ The signal embedding and structured-feature embedding are then fused:
 ```text
 256 + 64 = 320
         ↓
-     128
+      128
         ↓
       5 logits
 ```
@@ -254,13 +267,13 @@ The final thresholded classification report is:
 | **Macro Average** | **0.67** | **0.81** | **0.72** | **2,595** |
 | **Weighted Average** | **0.73** | **0.83** | **0.77** | **2,595** |
 
-### Important evaluation note
+### Test AUC
 
-The **0.9290 Macro-AUC** is the primary result because AUC does not require a classification threshold.
+![Test AUC](Heart_Reader/results/TEST_AUC.png)
 
-For the thresholded classification report, the final notebook selected thresholds from the Fold 10 precision-recall curves for MI, STTC, CD and HYP. Therefore, those precision/recall/F1 values should be considered **exploratory test-set thresholded results**, not a completely untouched threshold evaluation.
+### Confusion Matrix
 
-A stricter future evaluation should optimize thresholds on validation data and apply them once to the test set.
+![Confusion Matrix](Heart_Reader/results/Confusion_matrix.png)
 
 ---
 
@@ -281,11 +294,7 @@ results/
 └── XRESNET1D_epochs.png
 ```
 
-Example:
-
-![Test AUC](Heart_Reader/results/TEST_AUC.png)
-
-![Confusion Matrix](Heart_Reader/results/Confusion_matrix.png)
+These figures document the training behaviour and evaluation of the three neural-network backbones.
 
 ---
 
@@ -344,15 +353,15 @@ Accepts an ECG CSV file, preprocesses the signal, runs inference, and returns:
 
 ---
 
-## 🖥️ Application Demo
+# 🖥️ Application Demo
 
 ![Heart Reader Web Application](Heart_Reader/Demo.gif)
 
-A video demonstration is also available:
+### 🎥 Video demonstration
 
-```text
-Heart_Reader/Demo.mp4
-```
+[▶️ Watch the full application demonstration](Heart_Reader/Demo.mp4)
+
+> The GIF is embedded directly in the README. The MP4 is provided as a clickable video file because GitHub does not reliably display a repository-relative MP4 placed inside a Markdown code block as a video player.
 
 ---
 
@@ -452,9 +461,10 @@ The notebook covers:
 Heart-Reader/
 │
 ├── README.md
-├── REPORT.md
 │
 └── Heart_Reader/
+    ├── REPORT.md
+    │
     ├── notebook/
     │   └── ecg-final.ipynb
     │
@@ -493,19 +503,72 @@ The predictions generated by the application should not be used as a substitute 
 
 ---
 
-# 📚 References
+# 📚 Data Sources, Attribution and Licensing
 
-1. Wagner, P. et al. *PTB-XL, a large publicly available electrocardiography dataset.* Scientific Data, 2020.
-2. Strodthoff, N. et al. *Deep Learning for ECG Analysis: Benchmarks and Insights from PTB-XL.* IEEE Journal of Biomedical and Health Informatics, 2021.
-3. Strodthoff, N. et al. *PTB-XL+, a comprehensive electrocardiographic feature dataset.* Scientific Data, 2023.
-4. Fawaz, H. I. et al. *InceptionTime: Finding AlexNet for Time Series Classification.* Data Mining and Knowledge Discovery, 2020.
-5. Hu, J., Shen, L., Sun, G. *Squeeze-and-Excitation Networks.* CVPR, 2018.
-6. Lin, T.-Y. et al. *Focal Loss for Dense Object Detection.* IEEE TPAMI, 2020.
-7. Zhang, H. et al. *mixup: Beyond Empirical Risk Minimization.* ICLR, 2018.
-8. Izmailov, P. et al. *Averaging Weights Leads to Wider Optima and Better Generalization.* UAI, 2018.
+Heart Reader uses two publicly available ECG resources. The datasets themselves are **not included in this repository** and must be obtained separately from their respective sources.
+
+| Dataset | Original Source / Authors | Version | Used For | License | Access / Source |
+|---|---|---:|---|---|---|
+| **PTB-XL** | PhysioNet — Wagner, Strodthoff, Bousseljot, Samek & Schaeffter | 1.0.3 | Raw 12-lead ECG recordings and diagnostic annotations | **CC BY 4.0** | [PhysioNet](https://physionet.org/content/ptb-xl/1.0.3/) |
+| **PTB-XL+** | PhysioNet — Strodthoff et al. | 1.0.1 | Structured ECG features used by the multimodal branch | **CC BY 4.0** | [PhysioNet](https://physionet.org/content/ptb-xl-plus/1.0.1/) |
+
+### PTB-XL
+
+**Original dataset:**  
+Wagner, P., Strodthoff, N., Bousseljot, R.-D., Samek, W., & Schaeffter, T. (2022). *PTB-XL, a large publicly available electrocardiography dataset* (version 1.0.3). PhysioNet.  
+DOI: https://doi.org/10.13026/kfzx-aw45
+
+PTB-XL is the source of the raw 12-lead ECG recordings and diagnostic annotations used in this project.
+
+### PTB-XL+
+
+**Original dataset:**  
+Strodthoff, N., Mehari, T., Nagel, C., Aston, P., Sundar, A., Graff, C., Kanters, J., Haverkamp, W., Doessel, O., Loewe, A., Bär, M., & Schaeffter, T. (2023). *PTB-XL+, a comprehensive electrocardiographic feature dataset* (version 1.0.1). PhysioNet.  
+DOI: https://doi.org/10.13026/g6h6-7g88
+
+PTB-XL+ supplements PTB-XL with ECG features and other derived information. In Heart Reader, the multimodal branch uses **1,313 structured features** from the PTB-XL+ feature tables.
+
+### Dataset Access
+
+The datasets were accessed during development through publicly available distributions, including Kaggle mirrors. The Kaggle pages used during development are distributions of the original resources; the **official PhysioNet records are the authoritative sources for dataset attribution, citation, and licensing**.
+
+- PTB-XL: [Kaggle distribution](https://www.kaggle.com/)
+- PTB-XL+: [Kaggle distribution](https://www.kaggle.com/datasets/antonymgitau/ptb-xl-a-comprehensive-ecg-feature-dataset)
+
+Users should obtain the datasets directly from the official PhysioNet resources when possible and comply with their applicable terms.
+
+### Project Repository / Related Work
+
+If this project is based on, extends, or was developed from an existing GitHub project, that project should be acknowledged separately from the dataset attribution.
+
+**Related project / original repository:**  
+`<ADD_GITHUB_PROJECT_LINK_HERE>`
+
+Replace the placeholder above with the GitHub link of the project you want to acknowledge. Do not describe that repository as the owner of PTB-XL or PTB-XL+ unless its authors actually own those datasets.
 
 ---
 
-## License
+# 📚 References
 
-This repository contains research code. The PTB-XL and PTB-XL+ datasets are not included and must be obtained separately according to their respective terms of use.
+1. Wagner, P., Strodthoff, N., Bousseljot, R.-D., Samek, W., & Schaeffter, T. (2022). *PTB-XL, a large publicly available electrocardiography dataset* (version 1.0.3). PhysioNet. DOI: 10.13026/kfzx-aw45.
+2. Wagner, P. et al. (2020). *PTB-XL, a large publicly available electrocardiography dataset.* Scientific Data, 7, 154.
+3. Strodthoff, N., Mehari, T., Nagel, C. et al. (2023). *PTB-XL+, a comprehensive electrocardiographic feature dataset.* Scientific Data, 10, 279.
+4. Strodthoff, N. et al. (2021). *Deep Learning for ECG Analysis: Benchmarks and Insights from PTB-XL.* IEEE Journal of Biomedical and Health Informatics, 25, 1519–1528.
+5. Fawaz, H. I. et al. *InceptionTime: Finding AlexNet for Time Series Classification.* Data Mining and Knowledge Discovery, 2020.
+6. Hu, J., Shen, L., & Sun, G. *Squeeze-and-Excitation Networks.* CVPR, 2018.
+7. Lin, T.-Y. et al. *Focal Loss for Dense Object Detection.* IEEE TPAMI, 2020.
+
+---
+
+## 💻 Project Code License
+
+The license of this repository applies to the **original code and documentation contained in this project**, subject to any third-party components or code that are separately licensed.
+
+If you choose to publish the project under an open-source license, add the corresponding `LICENSE` file to the repository and state it here.
+
+For example:
+
+> The original code and documentation of Heart Reader are released under the **MIT License**. Third-party datasets and resources remain subject to their respective licenses and terms.
+
+**Important:** The project license does **not** replace, modify, or supersede the licenses of PTB-XL, PTB-XL+, or other third-party resources.
+
