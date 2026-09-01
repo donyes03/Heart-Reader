@@ -356,6 +356,21 @@ Accepts an ECG CSV file, preprocesses the signal, runs inference, and returns:
 
 ![Heart Reader Web Application](Heart_Reader/Demo.gif)
 
+The repository also includes screenshots documenting the web application workflow and diagnostic outputs. They are organized under:
+
+```text
+Heart_Reader/results/WebApplication_screenshots/
+├── sample1/
+│   ├── 1.png
+│   ├── 2.png
+│   └── 3.png
+└── sample2/
+    ├── 1.png
+    ├── 2.png
+    └── 3.png
+```
+[View all web application screenshots](Heart_Reader/results/WebApplication_screenshots/)
+
 ---
 
 # Running the Web Application
@@ -487,7 +502,16 @@ Heart-Reader/
     │   ├── SE_RESNET1D_curves.png
     │   ├── SE_RESNET1D_epochs.png
     │   ├── XRESNET1D_curves.png
-    │   └── XRESNET1D_epochs.png
+    │   ├── XRESNET1D_epochs.png
+    │   └── WebApplication_screenshots/
+    │       ├── sample1/
+    │       │   ├── 1.png
+    │       │   ├── 2.png
+    │       │   └── 3.png
+    │       └── sample2/
+    │           ├── 1.png
+    │           ├── 2.png
+    │           └── 3.png
     │
     ├── test_files/
     ├── requirements.txt
